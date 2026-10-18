@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -99,6 +100,12 @@ func main() {
 
 	}
 
-	log.Printf("Serving on port: %s\n", port)
+	log.Printf("Serving on port: %s", sanitizeInput(port))
 	log.Fatal(srv.ListenAndServe())
+}
+
+func sanitizeInput(input string) string {
+	// Strip out potential CRLF log injection vectors
+	escaped := strings.ReplaceAll(input, "\n", "")
+	return strings.ReplaceAll(escaped, "\r", "")
 }
