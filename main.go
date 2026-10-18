@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -100,12 +100,13 @@ func main() {
 
 	}
 
-	log.Printf("Serving on port: %s", sanitizeInput(port))
-	log.Fatal(srv.ListenAndServe())
-}
+	portNum, err := strconv.Atoi(port)
+	if err != nil || portNum < 1 || portNum > 65535 {
+		log.Fatalf("Invalid port specified: %s", port)
+	}
 
-func sanitizeInput(input string) string {
-	// Strip out potential CRLF log injection vectors
-	escaped := strings.ReplaceAll(input, "\n", "")
-	return strings.ReplaceAll(escaped, "\r", "")
+	// Log using the validated numeric value
+	log.Printf("Serving on port: %d", portNum)
+	log.Fatal(srv.ListenAndServe())
+
 }
