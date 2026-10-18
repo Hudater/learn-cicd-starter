@@ -102,9 +102,8 @@ func main() {
 
 	portNum, err := strconv.Atoi(port)
 	if err != nil || portNum < 1 || portNum > 65535 {
-		log.Fatalf("Invalid port specified: %s", port)
+		log.Fatalf("Invalid port specified: %s", strconv.Quote(port))
 	}
-
 	// Log using the validated numeric value
 	log.Printf("Serving on port: %d", portNum)
 	log.Fatal(srv.ListenAndServe())
